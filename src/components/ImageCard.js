@@ -4,6 +4,7 @@ class ImageCard extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = { spans: 0 };
     this.imageRef = React.createRef();
   }
 
@@ -14,13 +15,19 @@ class ImageCard extends React.Component {
 
   //The callback function must be bound or the value it returns will always be undefined. You can easily do this with an arrow function.
   setSpans = () => {
-    console.log(this.imageRef.current.clientHeight);
+    const height = this.imageRef.current.clientHeight;
+
+    // cap the value with Math.ceil. This number will be used to set the span value in the CSS.
+    const spans = Math.ceil(height / 10);
+
+    this.setState({ spans });
   };
 
   render() {
     const { description, urls } = this.props.image;
     return (
-      <div>
+      // Inline style is added to dynamically update the CSS with the spans state.
+      <div style={{ gridRowEnd: `span ${this.state.spans}` }}>
         <img ref={this.imageRef} alt={description} src={urls.regular} />
       </div>
     );
